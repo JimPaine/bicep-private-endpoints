@@ -1,21 +1,25 @@
 targetScope = 'resourceGroup'
 
-@description('The location the resource should be deployed to. Defaults to resource group location.')
+@description('The location the resources will be deployed to.')
 param location string = resourceGroup().location
 
+@description('The prefix to use when naming resources.')
 param prefix string
 
+@description('The resource ID of the vnet the private DNS zones will be attached to.')
 param vnetId string
 
+@description('The resource ID of the subnet that the endpoint will be deployed to.')
 param subnetId string
 
+@description('The resource ID of the service the endpoint is for.')
 param serviceId string
 
 @allowed([
   'Microsoft.Web/sites'
   'Microsoft.ServiceBus/namespaces'
 ])
-@description('')
+@description('The resource type of the service the endpoint is for.')
 param serviceType string
 
 var cleanedServiceType = toLower(replace(replace(serviceType, '/', '-'), '.', '-'))
