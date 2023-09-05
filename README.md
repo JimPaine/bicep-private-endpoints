@@ -9,7 +9,7 @@ Start of by grabbing the latest module from [here](https://github.com/JimPaine/b
 
 > It is on the backlog to put into a registry.
 
-Then reference the module and pass the required parameters.
+Then reference the module and pass the required parameters and that is it! The module will create all the required group IDs, zones and endpoints and then associate them to your network and resource of choice.
 
 ```bicep
 resource vnet 'Microsoft.Network/virtualNetworks@2023-04-01' = {
