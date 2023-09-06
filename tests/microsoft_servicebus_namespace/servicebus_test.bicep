@@ -29,7 +29,7 @@ module endpoints '../../main.bicep' = {
 // Required resources
 ///////////////////////////////////////
 module vnet '../_setup/vnet.bicep' = {
-  name: 'setup_vnet'
+  name: '${name}-setup-vnet'
   params: {
     cidr: cidr
     location: location
