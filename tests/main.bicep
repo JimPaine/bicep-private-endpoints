@@ -22,7 +22,7 @@ module function_test 'microsoft_web_sites/function_test.bicep' = {
   }
 }
 
-module servicebus_test 'microsoft_web_sites/function_test.bicep' = {
+module servicebus_test 'microsoft_servicebus_namespace/servicebus_test.bicep' = {
   scope: group
   name: 'servicebus_test'
   params: {
