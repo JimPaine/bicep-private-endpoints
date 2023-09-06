@@ -14,10 +14,10 @@ var suffix = uniqueString(subscription().id, resourceGroup().id)
 // TEST
 ///////////////////////////////////////
 module endpoints '../../main.bicep' = {
-  name: 'endpoints'
+  name: '${name}-endpoints'
   params: {
     location: location
-    prefix: 'func-linux'
+    prefix: 'func'
     serviceId: func.id
     serviceType: func.type
     subnetId: vnet.outputs.subnetId
@@ -29,7 +29,7 @@ module endpoints '../../main.bicep' = {
 // Required resources
 ///////////////////////////////////////
 module vnet '../_setup/vnet.bicep' = {
-  name: 'setup_vnet'
+  name: '${name}-setup-vnet'
   params: {
     cidr: cidr
     location: location
