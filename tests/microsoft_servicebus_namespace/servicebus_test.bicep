@@ -1,6 +1,6 @@
 targetScope = 'resourceGroup'
 
-param name string = 'function-test'
+param name string = 'servicebus-test'
 
 @description('Location to deploy test resources to. Defaults to resource group location')
 param location string = resourceGroup().location
@@ -17,7 +17,7 @@ module endpoints '../../main.bicep' = {
   name: 'endpoints'
   params: {
     location: location
-    prefix: 'func-linux'
+    prefix: 'sb'
     serviceId: namespace.id
     serviceType: namespace.type
     subnetId: vnet.outputs.subnetId

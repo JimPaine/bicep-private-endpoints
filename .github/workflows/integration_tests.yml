@@ -20,12 +20,12 @@ jobs:
         with:
           azcliversion: 2.51.0
           inlineScript: |
-            az deployment sub create -n 'bicep-private-endpoint${{ github.run_id }}' -l uksouth -f ./tests/main.bicep
+            az deployment sub create -n 'bicep-private-endpoint${{ github.run_number }}' -l uksouth -f ./tests/main.bicep
       - name: Clean up
         uses: azure/CLI@v1
         with:
           azcliversion: 2.51.0
           inlineScript: |
-            az group delete -n 'bicep-private-endpoint${{ github.run_id }}' -y
+            az group delete -n 'bicep-private-endpoint${{ github.run_number }}' -y
 
 

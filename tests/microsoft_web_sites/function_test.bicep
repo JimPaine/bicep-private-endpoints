@@ -17,7 +17,7 @@ module endpoints '../../main.bicep' = {
   name: 'endpoints'
   params: {
     location: location
-    prefix: 'func-linux'
+    prefix: 'func'
     serviceId: func.id
     serviceType: func.type
     subnetId: vnet.outputs.subnetId
