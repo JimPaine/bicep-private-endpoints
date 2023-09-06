@@ -17,6 +17,8 @@ param serviceId string
 @description('')
 param serviceType string
 
+var cleanedServiceType = toLower(replace(replace(serviceType, '/', '-'), '.', '-'))
+
 var groupIds = serviceType == 'Microsoft.Web/sites' ? [
   'sites'
 ] : []
@@ -27,7 +29,7 @@ var zones = serviceType == 'Microsoft.Web/sites' ? [
 
 @batchSize(1)
 resource endpoints 'Microsoft.Network/privateEndpoints@2021-05-01' = [for groupId in groupIds: {
-  name: '${prefix}-${serviceType}-${groupId}-pe'
+  name: '${prefix}-${cleanedServiceType}-${groupId}-pe'
   location: location
   properties: {
     subnet: {
@@ -35,7 +37,7 @@ resource endpoints 'Microsoft.Network/privateEndpoints@2021-05-01' = [for groupI
     }
     privateLinkServiceConnections: [
       {
-        name: '${serviceType}-pe'
+        name: '${cleanedServiceType}-pe'
         properties: {
           privateLinkServiceId: serviceId
           groupIds: [
@@ -53,7 +55,7 @@ resource dnsZones 'Microsoft.Network/privateDnsZones@2018-09-01' = [for zone in 
 }]
 
 resource dnsGoups 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2020-03-01' = [for (groupId, index) in groupIds: {
-  name: '${prefix}-${serviceType}-${groupId}-group'
+  name: '${prefix}-${cleanedServiceType}-${groupId}-group'
   parent: endpoints[index]
   properties: {
     privateDnsZoneConfigs: [for (zone, i) in zones: {
