@@ -26,6 +26,6 @@ jobs:
             az bicep install
             az bicep build -f ./tests/main.bicep
       - name: Create release
-        run: gh release create ${{env.tag}} './main.json' -p --generate-notes
+        run: gh release create ${{github.event.inputs.tag}} './main.json' -p --generate-notes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
