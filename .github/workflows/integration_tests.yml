@@ -1,0 +1,30 @@
+name: integration_tests
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+    
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log in with Azure
+        uses: azure/login@v1
+        with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}'
+      - name: Deploy
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.51.0
+          inlineScript: |
+            az deployment sub create -n bicep-private-endpoints -l uksouth -f ./tests/main.bicep
+      - name: Clean up
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.51.0
+          inlineScript: |
+            az group delete -n bicep-private-endpoints
+            
+        
