@@ -14,7 +14,7 @@ var suffix = uniqueString(subscription().id, resourceGroup().id)
 // TEST
 ///////////////////////////////////////
 module endpoints '../../main.bicep' = {
-  name: 'endpoints'
+  name: '${name}-endpoints'
   params: {
     location: location
     prefix: 'func'

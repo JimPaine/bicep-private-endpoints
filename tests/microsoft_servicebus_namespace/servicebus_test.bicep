@@ -14,7 +14,7 @@ var suffix = uniqueString(subscription().id, resourceGroup().id)
 // TEST
 ///////////////////////////////////////
 module endpoints '../../main.bicep' = {
-  name: 'endpoints'
+  name: '${name}-endpoints'
   params: {
     location: location
     prefix: 'sb'
@@ -40,4 +40,7 @@ module vnet '../_setup/vnet.bicep' = {
 resource namespace 'Microsoft.ServiceBus/namespaces@2022-10-01-preview' = {
   name: 'bus${suffix}'
   location: location
+  sku: {
+    name: 'Premium'
+  }
 }
