@@ -15,13 +15,13 @@ param serviceId string
   'Microsoft.Web/sites'
   'Microsoft.ServiceBus/namespaces'
 ])
-@description('')
 param serviceType string
 
 var cleanedServiceType = toLower(replace(replace(serviceType, '/', '-'), '.', '-'))
 
 var groupIds = serviceType == 'Microsoft.Web/sites' ? [
   'sites'
+  'FAILTEST'
 ] : serviceType == 'Microsoft.ServiceBus/namespaces' ? [
   'namespace'
 ] : []

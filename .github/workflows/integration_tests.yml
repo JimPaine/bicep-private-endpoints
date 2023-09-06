@@ -21,6 +21,11 @@ jobs:
           azcliversion: 2.51.0
           inlineScript: |
             az deployment sub create -n 'bicep-private-endpoint${{ github.run_number }}' -l uksouth -f ./tests/main.bicep
+            states=$(az network private-endpoint list -g 'bicep-private-endpoint${{ github.run_number }}' --query "[?provisioningState!='Succeeded'].{name:name,provisioningState:provisioningState}")
+            echo $states
+            if [ ${#states[@]} -gt 0 ]; then
+              exit 1
+            fi
       - name: Clean up
         uses: azure/CLI@v1
         with:
