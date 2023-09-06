@@ -21,7 +21,6 @@ var cleanedServiceType = toLower(replace(replace(serviceType, '/', '-'), '.', '-
 
 var groupIds = serviceType == 'Microsoft.Web/sites' ? [
   'sites'
-  'FAILTEST'
 ] : serviceType == 'Microsoft.ServiceBus/namespaces' ? [
   'namespace'
 ] : []
