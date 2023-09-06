@@ -13,6 +13,7 @@ param serviceId string
 
 @allowed([
   'Microsoft.Web/sites'
+  'Microsoft.ServiceBus/namespaces'
 ])
 @description('')
 param serviceType string
@@ -21,10 +22,14 @@ var cleanedServiceType = toLower(replace(replace(serviceType, '/', '-'), '.', '-
 
 var groupIds = serviceType == 'Microsoft.Web/sites' ? [
   'sites'
+] : serviceType == 'Microsoft.ServiceBus/namespaces' ? [
+  'namespace'
 ] : []
 
 var zones = serviceType == 'Microsoft.Web/sites' ? [
   'privatelink.azurewebsites.net'
+] :  serviceType == 'Microsoft.ServiceBus/namespaces' ? [
+  'privatelink.servicebus.windows.net'
 ] : []
 
 @batchSize(1)
