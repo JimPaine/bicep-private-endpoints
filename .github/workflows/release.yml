@@ -24,7 +24,7 @@ jobs:
           inlineScript: |
             az config set bicep.use_binary_from_path=False
             az bicep install
-            az bicep build -f ./tests/main.bicep
+            az bicep build -f ./main.bicep
       - name: Create release
         run: gh release create ${{github.event.inputs.tag}} './main.json' -p --generate-notes
         env:
