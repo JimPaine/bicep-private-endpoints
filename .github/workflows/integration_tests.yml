@@ -22,10 +22,11 @@ jobs:
           inlineScript: |
             az deployment sub create -n bicep-private-endpoints -l uksouth -f ./tests/main.bicep
       - name: Clean up
+        if: always()
         uses: azure/CLI@v1
         with:
           azcliversion: 2.51.0
           inlineScript: |
-            az group delete -n bicep-private-endpoints
+            az group delete -n bicep-private-endpoints -y
 
 
