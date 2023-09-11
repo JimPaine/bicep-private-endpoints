@@ -88,7 +88,8 @@ resource dnsGoups 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2020-
   }
 }]
 
-resource networkLinkNewZones 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2018-09-01' = [for (zone, index) in zones: if (!useExistingZones) {
+// parent can't be output of condition so have to have condition at top level
+resource networkLinks 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2018-09-01' = [for (zone, index) in zones: if (!useExistingZones) {
   name: newDnsZones[index].name
   parent: newDnsZones[index]
   location: 'global'
@@ -98,6 +99,9 @@ resource networkLinkNewZones 'Microsoft.Network/privateDnsZones/virtualNetworkLi
     }
     registrationEnabled: false
   }
+  dependsOn: [
+    dnsGoups // slow down due to race condition on zone
+  ]
 }]
 
 resource networkLinkExistingZones 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2018-09-01' = [for (zone, index) in zones: if (useExistingZones) {
@@ -110,4 +114,7 @@ resource networkLinkExistingZones 'Microsoft.Network/privateDnsZones/virtualNetw
     }
     registrationEnabled: false
   }
+  dependsOn: [
+    dnsGoups // slow down due to race condition on zone
+  ]
 }]
