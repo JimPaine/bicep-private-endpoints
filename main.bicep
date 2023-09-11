@@ -86,30 +86,19 @@ resource dnsGoups 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2020-
       }
     }]
   }
-  dependsOn: !useExistingZones ? newDnsZones : existingDnsZones
 }]
 
 // parent can't be output of condition so have to have condition at top level
-resource networkLinks 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2018-09-01' = [for (zone, index) in zones: if (!useExistingZones) {
-  name: newDnsZones[index].name
-  parent: newDnsZones[index]
-  location: 'global'
-  properties: {
-    virtualNetwork: {
-      id: vnetId
-    }
-    registrationEnabled: false
-  }
-}]
 
-resource networkLinkExistingZones 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2018-09-01' = [for (zone, index) in zones: if (useExistingZones) {
-  name: existingDnsZones[index].name
-  parent: existingDnsZones[index]
-  location: 'global'
-  properties: {
-    virtualNetwork: {
-      id: vnetId
-    }
-    registrationEnabled: false
+module links './modules/virtualNetworkLinks.bicep' = {
+  name: '${prefix}links'
+  params: {
+    zones: zones
+    vnetId: vnetId
   }
-}]
+  dependsOn: [
+    existingDnsZones
+    newDnsZones
+  ]
+}
+
