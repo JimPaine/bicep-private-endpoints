@@ -88,8 +88,6 @@ resource dnsGoups 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2020-
   }
 }]
 
-// parent can't be output of condition so have to have condition at top level
-
 resource networkLinks 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2018-09-01' = [for (zone, index) in zones: {
   name: '${zone}/link'
   location: 'global'

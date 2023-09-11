@@ -14,17 +14,17 @@ resource vnet 'Microsoft.Network/virtualNetworks@2023-04-01' = {
         cidr
       ]
     }
-    subnets: [
-      {
-        name: 'default'
-        properties: {
-          addressPrefix: cidr
-          privateEndpointNetworkPolicies: 'Disabled'
-        }
-      }
-    ]
+  }
+}
+
+resource subnet 'Microsoft.Network/virtualNetworks/subnets@2023-05-01' = {
+  name: 'subnet'
+  parent: vnet
+  properties: {
+    addressPrefix: cidr
+    privateEndpointNetworkPolicies: 'Disabled'
   }
 }
 
 output id string = vnet.id
-output subnetId string = vnet.properties.subnets[0].id
+output subnetId string = subnet.id
