@@ -21,6 +21,7 @@ param useExistingZones bool = false
 @allowed([
   'Microsoft.EventHub/namespaces'
   'Microsoft.ServiceBus/namespaces'
+  'Microsoft.Storage/storageAccounts'
   'Microsoft.Web/sites'
 ])
 @description('The resource type of the service the endpoint is for.')
@@ -32,6 +33,11 @@ var groupIds = serviceType == 'Microsoft.EventHub/namespaces' ? [
   'namespace'
 ] : serviceType == 'Microsoft.ServiceBus/namespaces' ? [
   'namespace'
+] : serviceType == 'Microsoft.Storage/storageAccounts' ? [
+  'blob'
+  'file'
+  'queue'
+  'table'
 ] : serviceType == 'Microsoft.Web/sites' ? [
   'sites'
 ] : []
@@ -40,6 +46,11 @@ var zones = serviceType == 'Microsoft.EventHub/namespaces' ? [
   'privatelink.servicebus.windows.net'
 ] :  serviceType == 'Microsoft.ServiceBus/namespaces' ? [
   'privatelink.servicebus.windows.net'
+] : serviceType == 'Microsoft.Storage/storageAccounts' ? [
+  'privatelink.blob.${environment().suffixes.storage}'
+  'privatelink.file.${environment().suffixes.storage}'
+  'privatelink.queue.${environment().suffixes.storage}'
+  'privatelink.table.${environment().suffixes.storage}'
 ] : serviceType == 'Microsoft.Web/sites' ? [
   'privatelink.azurewebsites.net'
 ] : []

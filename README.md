@@ -37,8 +37,8 @@ module endpoints 'main.json' = {
     prefix: func.name
     serviceId: func.id
     serviceType: func.type
-    subnetId: vnet.outputs.subnetId
-    vnetId: vnet.outputs.id
+    subnetId: vnet.properties.subnets[0].id
+    vnetId: vnet.id
   }
 }
 ```
@@ -54,9 +54,15 @@ module endpoints 'main.json' = {
 | subnetId    | resource ID   | The resource ID of the subnet that the endpoint will be deployed to.   |
 | vnetId      | resource ID   | The resource ID of the vnet the private DNS zones will be attached to. |
 
+## Optional parameters
+
+| Name             | Type | Description                                    |
+| ---------------- | -----| ---------------------------------------------- |
+| useExistingZones | bool | The Use existing zones for this resource type. |
 
 ## Supported resources
 
 - Microsoft.EventHub/namespaces
 - Microsoft.ServiceBus/Namespaces
+- Microsoft.Storage/storageAccounts
 - Microsoft.Web/Sites
