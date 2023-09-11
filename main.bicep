@@ -99,3 +99,15 @@ resource networkLinkNewZones 'Microsoft.Network/privateDnsZones/virtualNetworkLi
     registrationEnabled: false
   }
 }]
+
+resource networkLinkExistingZones 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2018-09-01' = [for (zone, index) in zones: if (useExistingZones) {
+  name: existingDnsZones[index].name
+  parent: existingDnsZones[index]
+  location: 'global'
+  properties: {
+    virtualNetwork: {
+      id: vnetId
+    }
+    registrationEnabled: false
+  }
+}]
