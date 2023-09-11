@@ -82,7 +82,7 @@ resource dnsGoups 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2020-
     privateDnsZoneConfigs: [for (zone, i) in zones: {
       name: zone
       properties: {
-        privateDnsZoneId: !useExistingZones ? newDnsZones[i].id : existingDnsZones[i].id
+        privateDnsZoneId: useExistingZones ? existingDnsZones[i].id : newDnsZones[i].id
       }
     }]
   }
@@ -90,15 +90,14 @@ resource dnsGoups 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2020-
 
 // parent can't be output of condition so have to have condition at top level
 
-module links './modules/virtualNetworkLinks.bicep' = {
-  name: '${prefix}links'
-  params: {
-    zones: zones
-    vnetId: vnetId
+resource networkLinks 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2018-09-01' = [for (zone, index) in zones: {
+  name: '${zone}/link'
+  location: 'global'
+  properties: {
+    virtualNetwork: {
+      id: vnetId
+    }
+    registrationEnabled: false
   }
-  dependsOn: [
-    existingDnsZones
-    newDnsZones
-  ]
-}
-
+  dependsOn: useExistingZones ? existingDnsZones : newDnsZones
+}]
