@@ -86,6 +86,7 @@ resource dnsGoups 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2020-
       }
     }]
   }
+  dependsOn: !useExistingZones ? newDnsZones : existingDnsZones
 }]
 
 // parent can't be output of condition so have to have condition at top level
@@ -99,7 +100,7 @@ resource networkLinks 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@201
     }
     registrationEnabled: false
   }
-  dependsOn: newDnsZones
+  dependsOn: dnsGoups
 }]
 
 resource networkLinkExistingZones 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2018-09-01' = [for (zone, index) in zones: if (useExistingZones) {
@@ -112,5 +113,5 @@ resource networkLinkExistingZones 'Microsoft.Network/privateDnsZones/virtualNetw
     }
     registrationEnabled: false
   }
-  dependsOn: existingDnsZones
+  dependsOn: dnsGoups
 }]
