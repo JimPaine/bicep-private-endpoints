@@ -99,9 +99,7 @@ resource networkLinks 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@201
     }
     registrationEnabled: false
   }
-  dependsOn: [
-    dnsGoups // slow down due to race condition on zone
-  ]
+  dependsOn: newDnsZones
 }]
 
 resource networkLinkExistingZones 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2018-09-01' = [for (zone, index) in zones: if (useExistingZones) {
@@ -114,7 +112,5 @@ resource networkLinkExistingZones 'Microsoft.Network/privateDnsZones/virtualNetw
     }
     registrationEnabled: false
   }
-  dependsOn: [
-    dnsGoups // slow down due to race condition on zone
-  ]
+  dependsOn: existingDnsZones
 }]
