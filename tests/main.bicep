@@ -11,6 +11,7 @@ resource group 'Microsoft.Resources/resourceGroups@2022-09-01' = {
 var cidrs = {
   function_test: '10.0.0.0/24'
   servicebus_test: '10.0.1.0/24'
+  eventhub_test: '10.0.2.0/24'
 }
 
 module function_test 'microsoft_web_sites/function_test.bicep' = {
@@ -22,7 +23,7 @@ module function_test 'microsoft_web_sites/function_test.bicep' = {
   }
 }
 
-module servicebus_test 'microsoft_servicebus_namespace/servicebus_test.bicep' = {
+module servicebus_test 'microsoft_servicebus_namespaces/servicebus_test.bicep' = {
   scope: group
   name: 'servicebus_test'
   params: {
@@ -30,3 +31,16 @@ module servicebus_test 'microsoft_servicebus_namespace/servicebus_test.bicep' = 
     location: location
   }
 }
+
+module eventhub_test 'microsoft_eventhub_namespaces/eventhub_test.bicep' = {
+  scope: group
+  name: 'eventhub_test'
+  params: {
+    cidr: cidrs.eventhub_test
+    location: location
+  }
+  dependsOn: [
+    servicebus_test // they share the same dns zone, so create the zone and links in SB and then add additional groups
+  ]
+}
+

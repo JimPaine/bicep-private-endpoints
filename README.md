@@ -57,5 +57,6 @@ module endpoints 'main.json' = {
 
 ## Supported resources
 
-- Microsoft.Web/Sites
+- Microsoft.EventHub/namespaces
 - Microsoft.ServiceBus/Namespaces
+- Microsoft.Web/Sites

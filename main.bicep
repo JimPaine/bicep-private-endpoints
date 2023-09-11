@@ -15,25 +15,33 @@ param subnetId string
 @description('The resource ID of the service the endpoint is for.')
 param serviceId string
 
+@description('Use existing zones for this resource type.')
+param useExistingZones bool = false
+
 @allowed([
-  'Microsoft.Web/sites'
+  'Microsoft.EventHub/namespaces'
   'Microsoft.ServiceBus/namespaces'
+  'Microsoft.Web/sites'
 ])
 @description('The resource type of the service the endpoint is for.')
 param serviceType string
 
 var cleanedServiceType = toLower(replace(replace(serviceType, '/', '-'), '.', '-'))
 
-var groupIds = serviceType == 'Microsoft.Web/sites' ? [
-  'sites'
+var groupIds = serviceType == 'Microsoft.EventHub/namespaces' ? [
+  'namespace'
 ] : serviceType == 'Microsoft.ServiceBus/namespaces' ? [
   'namespace'
+] : serviceType == 'Microsoft.Web/sites' ? [
+  'sites'
 ] : []
 
-var zones = serviceType == 'Microsoft.Web/sites' ? [
-  'privatelink.azurewebsites.net'
+var zones = serviceType == 'Microsoft.EventHub/namespaces' ? [
+  'privatelink.servicebus.windows.net'
 ] :  serviceType == 'Microsoft.ServiceBus/namespaces' ? [
   'privatelink.servicebus.windows.net'
+] : serviceType == 'Microsoft.Web/sites' ? [
+  'privatelink.azurewebsites.net'
 ] : []
 
 @batchSize(1)
@@ -58,7 +66,11 @@ resource endpoints 'Microsoft.Network/privateEndpoints@2021-05-01' = [for groupI
   }
 }]
 
-resource dnsZones 'Microsoft.Network/privateDnsZones@2018-09-01' = [for zone in zones: {
+resource existingDnsZones 'Microsoft.Network/privateDnsZones@2018-09-01' existing = [for zone in zones: if(useExistingZones) {
+  name: zone
+}]
+
+resource newDnsZones 'Microsoft.Network/privateDnsZones@2018-09-01' = [for zone in zones: if(!useExistingZones) {
   name: zone
   location: 'global'
 }]
@@ -70,15 +82,14 @@ resource dnsGoups 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2020-
     privateDnsZoneConfigs: [for (zone, i) in zones: {
       name: zone
       properties: {
-        privateDnsZoneId: dnsZones[i].id
+        privateDnsZoneId: useExistingZones ? existingDnsZones[i].id : newDnsZones[i].id
       }
     }]
   }
 }]
 
-resource networkLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2018-09-01' = [for (zone, index) in zones: {
-  name: dnsZones[index].name
-  parent: dnsZones[index]
+resource networkLinks 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2018-09-01' = [for (zone, index) in zones: {
+  name: '${zone}/${prefix}'
   location: 'global'
   properties: {
     virtualNetwork: {
@@ -86,4 +97,5 @@ resource networkLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2018
     }
     registrationEnabled: false
   }
+  dependsOn: useExistingZones ? existingDnsZones : newDnsZones
 }]
