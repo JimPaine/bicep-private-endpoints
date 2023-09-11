@@ -16,24 +16,29 @@ param subnetId string
 param serviceId string
 
 @allowed([
-  'Microsoft.Web/sites'
+  'Microsoft.EventHub/namespaces'
   'Microsoft.ServiceBus/namespaces'
+  'Microsoft.Web/sites'
 ])
 @description('The resource type of the service the endpoint is for.')
 param serviceType string
 
 var cleanedServiceType = toLower(replace(replace(serviceType, '/', '-'), '.', '-'))
 
-var groupIds = serviceType == 'Microsoft.Web/sites' ? [
-  'sites'
+var groupIds = serviceType == 'Microsoft.EventHub/namespaces' ? [
+  'namespace'
 ] : serviceType == 'Microsoft.ServiceBus/namespaces' ? [
   'namespace'
+] : serviceType == 'Microsoft.Web/sites' ? [
+  'sites'
 ] : []
 
-var zones = serviceType == 'Microsoft.Web/sites' ? [
-  'privatelink.azurewebsites.net'
+var zones = serviceType == 'Microsoft.EventHub/namespaces' ? [
+  'privatelink.servicebus.windows.net'
 ] :  serviceType == 'Microsoft.ServiceBus/namespaces' ? [
   'privatelink.servicebus.windows.net'
+] : serviceType == 'Microsoft.Web/sites' ? [
+  'privatelink.azurewebsites.net'
 ] : []
 
 @batchSize(1)
