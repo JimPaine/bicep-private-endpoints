@@ -22,6 +22,8 @@ module endpoints '../../main.bicep' = {
     serviceType: namespace.type
     subnetId: vnet.outputs.subnetId
     vnetId: vnet.outputs.id
+    useExistingZones: true
+    zoneVnetLinkExists: true
   }
 }
 

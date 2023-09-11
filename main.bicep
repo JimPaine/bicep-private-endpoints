@@ -15,6 +15,14 @@ param subnetId string
 @description('The resource ID of the service the endpoint is for.')
 param serviceId string
 
+@description('Use existing zones for this resource type.')
+param useExistingZones bool = false
+
+@description('Do not attempt to create vnet links as they already exist. param useExistingZones must also be true')
+param zoneVnetLinkExists bool = false
+
+var doNotCreateZoneVnetLinks = useExistingZones && zoneVnetLinkExists
+
 @allowed([
   'Microsoft.EventHub/namespaces'
   'Microsoft.ServiceBus/namespaces'
@@ -63,7 +71,11 @@ resource endpoints 'Microsoft.Network/privateEndpoints@2021-05-01' = [for groupI
   }
 }]
 
-resource dnsZones 'Microsoft.Network/privateDnsZones@2018-09-01' = [for zone in zones: {
+resource existingDnsZones 'Microsoft.Network/privateDnsZones@2018-09-01' existing = [for zone in zones: if(useExistingZones) {
+  name: zone
+}]
+
+resource newDnsZones 'Microsoft.Network/privateDnsZones@2018-09-01' = [for zone in zones: if(!useExistingZones) {
   name: zone
   location: 'global'
 }]
@@ -75,15 +87,15 @@ resource dnsGoups 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2020-
     privateDnsZoneConfigs: [for (zone, i) in zones: {
       name: zone
       properties: {
-        privateDnsZoneId: dnsZones[i].id
+        privateDnsZoneId: !useExistingZones ? newDnsZones[i].id : existingDnsZones[i].id
       }
     }]
   }
 }]
 
-resource networkLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2018-09-01' = [for (zone, index) in zones: {
-  name: dnsZones[index].name
-  parent: dnsZones[index]
+resource networkLinkNewZones 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2018-09-01' = [for (zone, index) in zones: if (!useExistingZones) {
+  name: newDnsZones[index].name
+  parent: newDnsZones[index]
   location: 'global'
   properties: {
     virtualNetwork: {
@@ -92,3 +104,17 @@ resource networkLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2018
     registrationEnabled: false
   }
 }]
+
+resource networkLinkExistingZones 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2018-09-01' = [for (zone, index) in zones: if(useExistingZones && doNotCreateZoneVnetLinks) {
+  name: existingDnsZones[index].name
+  parent: existingDnsZones[index]
+  location: 'global'
+  properties: {
+    virtualNetwork: {
+      id: vnetId
+    }
+    registrationEnabled: false
+  }
+}]
+
+
