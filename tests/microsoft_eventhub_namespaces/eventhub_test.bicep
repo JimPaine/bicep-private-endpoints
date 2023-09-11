@@ -38,7 +38,7 @@ module vnet '../_setup/vnet.bicep' = {
 }
 
 resource namespace 'Microsoft.EventHub/namespaces@2023-01-01-preview' = {
-  name: 'sh${suffix}'
+  name: 'eh${suffix}'
   location: location
   sku: {
     name: 'Premium'

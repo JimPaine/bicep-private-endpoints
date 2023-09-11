@@ -32,8 +32,14 @@ module servicebus_test 'microsoft_servicebus_namespaces/servicebus_test.bicep' =
   }
 }
 
+// dedicated group to prevent clash with SB DNS zone
+resource eh_group 'Microsoft.Resources/resourceGroups@2022-09-01' = {
+  name: '${name}-eh'
+  location: location
+}
+
 module eventhub_test 'microsoft_servicebus_namespaces/servicebus_test.bicep' = {
-  scope: group
+  scope: eh_group
   name: 'eventhub_test'
   params: {
     cidr: cidrs.eventhub_test
