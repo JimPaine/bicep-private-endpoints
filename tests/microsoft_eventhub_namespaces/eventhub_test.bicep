@@ -23,7 +23,6 @@ module endpoints '../../main.bicep' = {
     subnetId: vnet.outputs.subnetId
     vnetId: vnet.outputs.id
     useExistingZones: true
-    zoneVnetLinkExists: true
   }
 }
 

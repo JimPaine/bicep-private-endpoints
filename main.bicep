@@ -18,11 +18,6 @@ param serviceId string
 @description('Use existing zones for this resource type.')
 param useExistingZones bool = false
 
-@description('Do not attempt to create vnet links as they already exist. param useExistingZones must also be true')
-param zoneVnetLinkExists bool = false
-
-var doNotCreateZoneVnetLinks = useExistingZones && zoneVnetLinkExists
-
 @allowed([
   'Microsoft.EventHub/namespaces'
   'Microsoft.ServiceBus/namespaces'
@@ -104,17 +99,3 @@ resource networkLinkNewZones 'Microsoft.Network/privateDnsZones/virtualNetworkLi
     registrationEnabled: false
   }
 }]
-
-resource networkLinkExistingZones 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2018-09-01' = [for (zone, index) in zones: if(useExistingZones && doNotCreateZoneVnetLinks) {
-  name: existingDnsZones[index].name
-  parent: existingDnsZones[index]
-  location: 'global'
-  properties: {
-    virtualNetwork: {
-      id: vnetId
-    }
-    registrationEnabled: false
-  }
-}]
-
-
