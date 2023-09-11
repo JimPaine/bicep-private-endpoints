@@ -32,7 +32,7 @@ module servicebus_test 'microsoft_servicebus_namespaces/servicebus_test.bicep' =
   }
 }
 
-module eventhub_test 'microsoft_servicebus_namespaces/servicebus_test.bicep' = {
+module eventhub_test 'microsoft_eventhub_namespaces/eventhub_test.bicep' = {
   scope: group
   name: 'eventhub_test'
   params: {
