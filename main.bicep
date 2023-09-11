@@ -89,7 +89,7 @@ resource dnsGoups 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2020-
 }]
 
 resource networkLinks 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2018-09-01' = [for (zone, index) in zones: {
-  name: '${zone}/link'
+  name: '${zone}/${prefix}'
   location: 'global'
   properties: {
     virtualNetwork: {
