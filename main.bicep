@@ -13,7 +13,7 @@ param vnetId string
 param subnetId string
 
 @description('The name of the resource the endpoint is for.')
-param serviceName string = ''
+param serviceName string
 
 @description('The resource ID of the service the endpoint is for.')
 param serviceId string

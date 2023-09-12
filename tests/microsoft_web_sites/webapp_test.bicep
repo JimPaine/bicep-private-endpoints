@@ -19,6 +19,7 @@ module endpoints '../../main.bicep' = {
     location: location
     prefix: 'web'
     serviceId: app.id
+    serviceName: app.name
     serviceType: app.type
     subnetId: vnet.outputs.subnetId
     vnetId: vnet.outputs.id
