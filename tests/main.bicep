@@ -15,6 +15,7 @@ var cidrs = {
   storage_test: '10.0.3.0/24'
   webapp_test: '10.0.4.0/24'
   app_config_test: '10.0.5.0/24'
+  static_site_test: '10.0.6.0./24'
 }
 
 module function_test 'microsoft_web_sites/function_test.bicep' = {
@@ -73,6 +74,15 @@ module app_config_test 'microsoft_appconfiguration_configurationstores/app_confi
   name: 'app_config_test'
   params: {
     cidr: cidrs.app_config_test
+    location: location
+  }
+}
+
+module static_site_test 'microsoft_web_staticsites/staticsite_test.bicep' = {
+  scope: group
+  name: 'static_site_test'
+  params: {
+    cidr: cidrs.static_site_test
     location: location
   }
 }
