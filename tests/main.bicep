@@ -62,7 +62,7 @@ module eventhub_test 'microsoft_eventhub/namespaces.bicep' = {
   ]
 }
 
-module storage_test 'microsoft_storage/storageaccounts.bicep' = {
+module storage_test 'microsoft_storage/storageAccounts.bicep' = {
   scope: group
   name: 'storage_test'
   params: {
@@ -71,7 +71,7 @@ module storage_test 'microsoft_storage/storageaccounts.bicep' = {
   }
 }
 
-module app_config_test 'microsoft_appconfiguration/configurationstores.bicep' = {
+module app_config_test 'microsoft_appconfiguration/configurationStores.bicep' = {
   scope: group
   name: 'app_config_test'
   params: {
