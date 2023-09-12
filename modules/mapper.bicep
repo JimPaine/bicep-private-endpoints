@@ -9,6 +9,7 @@ param serviceResourceGroupName string = resourceGroup().name
 @allowed([
   'Microsoft.AppConfiguration/configurationStores'
   'Microsoft.EventHub/namespaces'
+  'Microsoft.KeyVault/vaults'
   'Microsoft.ServiceBus/namespaces'
   'Microsoft.SignalRService/signalR'
   'Microsoft.Storage/storageAccounts'
@@ -22,7 +23,9 @@ var zones = serviceType == 'Microsoft.AppConfiguration/configurationStores' ? [
   'privatelink.azconfig.io'
 ] : serviceType == 'Microsoft.EventHub/namespaces' ? [
   'privatelink.servicebus.windows.net'
-] :  serviceType == 'Microsoft.ServiceBus/namespaces' ? [
+] : serviceType == 'Microsoft.KeyVault/vaults' ? [
+  'privatelink.vaultcore.azure.net'
+] : serviceType == 'Microsoft.ServiceBus/namespaces' ? [
   'privatelink.servicebus.windows.net'
 ] : serviceType == 'Microsoft.SignalRService/signalR' ? [
   'privatelink.service.signalr.net'
@@ -46,6 +49,8 @@ var groupIds = serviceType == 'Microsoft.AppConfiguration/configurationStores' ?
   'configurationStores'
 ] : serviceType == 'Microsoft.EventHub/namespaces' ? [
   'namespace'
+] : serviceType == 'Microsoft.KeyVault/vaults' ? [
+  'vault'
 ] : serviceType == 'Microsoft.ServiceBus/namespaces' ? [
   'namespace'
 ] : serviceType == 'Microsoft.SignalRService/signalR' ? [

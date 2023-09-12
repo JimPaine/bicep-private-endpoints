@@ -27,6 +27,7 @@ param serviceResourceGroupName string = resourceGroup().name
 @allowed([
   'Microsoft.AppConfiguration/configurationStores'
   'Microsoft.EventHub/namespaces'
+  'Microsoft.KeyVault/vaults'
   'Microsoft.ServiceBus/namespaces'
   'Microsoft.SignalRService/signalR'
   'Microsoft.Storage/storageAccounts'

@@ -17,6 +17,7 @@ var cidrs = {
   app_config_test: '10.0.5.0/24'
   static_site_test: '10.0.6.0./24'
   signal_r_test: '10.0.7.0/24'
+  vault_test: '10.0.8.0/24'
 }
 
 module function_test 'microsoft_web_sites/function_test.bicep' = {
@@ -94,6 +95,15 @@ module signal_r_test 'microsoft_signalrservice_signalr/signalr.bicep' = {
   name: 'signal_r_test'
   params: {
     cidr: cidrs.signal_r_test
+    location: location
+  }
+}
+
+module vault_test 'microsoft_keyvault_vaults/key_vault.bicep' = {
+  scope: group
+  name: 'vault_test'
+  params: {
+    cidr: cidrs.vault_test
     location: location
   }
 }
