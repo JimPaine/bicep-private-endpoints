@@ -47,5 +47,6 @@ resource vault 'Microsoft.KeyVault/vaults@2023-02-01' = {
       name: 'premium'
     }
     tenantId: subscription().tenantId
+    accessPolicies: []
   }
 }
