@@ -77,12 +77,12 @@ module app_config_test 'microsoft_appconfiguration_configurationstores/app_confi
     location: location
   }
 }
-
-module static_site_test 'microsoft_web_staticsites/staticsite_test.bicep' = {
-  scope: group
-  name: 'static_site_test'
-  params: {
-    cidr: cidrs.static_site_test
-    location: location
-  }
-}
+// exclude due to capacity issues
+// module static_site_test 'microsoft_web_staticsites/staticsite_test.bicep' = {
+//   scope: group
+//   name: 'static_site_test'
+//   params: {
+//     cidr: cidrs.static_site_test
+//     location: location
+//   }
+// }
