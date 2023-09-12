@@ -48,7 +48,6 @@ module endpoints 'main.json' = {
 | Name        | Type          | Description                                                            |
 | ----------- | ------------- | ---------------------------------------------------------------------- |
 | location    | string        | The location the resources will be deployed to.                        |
-| prefix      | string        | The prefix to use when naming resources.                               |
 | serviceId   | resource ID   | The resource ID of the service the endpoint is for.                    |
 | serviceName | string        | The name of the resource the endpoint is for.                          |
 | serviceType | resource type | The resource type of the service the endpoint is for.                  |
