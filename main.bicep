@@ -61,4 +61,5 @@ module core 'modules/core.bicep' = {
     vnetId: vnetId
     location: location
   }
+  dependsOn: !useExistingZones ? [zoneHandler] : []
 }
