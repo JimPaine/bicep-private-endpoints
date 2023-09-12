@@ -22,7 +22,6 @@ module endpoints '../../main.bicep' = {
     serviceType: storage.type
     subnetId: vnet.outputs.subnetId
     vnetId: vnet.outputs.id
-    useExistingZones: true
   }
 }
 
@@ -38,8 +37,9 @@ module vnet '../_setup/vnet.bicep' = {
   }
 }
 
+var cleanedName = replace(name, '-', '')
 resource storage 'Microsoft.Storage/storageAccounts@2022-05-01' = {
-  name: '${name}${suffix}'
+  name: '${cleanedName}${suffix}'
   location: location
   kind: 'StorageV2'
   sku: {
