@@ -32,6 +32,9 @@ module webapp_test 'microsoft_web_sites/webapp_test.bicep' = {
     cidr: cidrs.webapp_test
     location: location
   }
+  dependsOn: [
+    function_test
+  ]
 }
 
 module servicebus_test 'microsoft_servicebus_namespaces/servicebus_test.bicep' = {
