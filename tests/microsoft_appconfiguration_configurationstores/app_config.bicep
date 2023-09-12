@@ -17,7 +17,7 @@ module endpoints '../../main.bicep' = {
   name: '${name}-endpoints'
   params: {
     location: location
-    prefix: 'func'
+    prefix: 'appconfig'
     serviceId: config.id
     serviceName: config.name
     serviceType: config.type
