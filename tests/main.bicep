@@ -16,6 +16,7 @@ var cidrs = {
   webapp_test: '10.0.4.0/24'
   app_config_test: '10.0.5.0/24'
   static_site_test: '10.0.6.0./24'
+  signal_r_test: '10.0.7.0/24'
 }
 
 module function_test 'microsoft_web_sites/function_test.bicep' = {
@@ -77,6 +78,7 @@ module app_config_test 'microsoft_appconfiguration_configurationstores/app_confi
     location: location
   }
 }
+
 // exclude due to capacity issues
 // module static_site_test 'microsoft_web_staticsites/staticsite_test.bicep' = {
 //   scope: group
@@ -86,3 +88,12 @@ module app_config_test 'microsoft_appconfiguration_configurationstores/app_confi
 //     location: location
 //   }
 // }
+
+module signal_r_test 'microsoft_signalrservice_signalr/signalr.bicep' = {
+  scope: group
+  name: 'signal_r_test'
+  params: {
+    cidr: cidrs.signal_r_test
+    location: location
+  }
+}

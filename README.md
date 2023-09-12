@@ -64,8 +64,10 @@ module endpoints 'main.json' = {
 
 ## Supported resources
 
+- Microsoft.AppConfiguration
 - Microsoft.EventHub/namespaces
 - Microsoft.ServiceBus/Namespaces
+- Microsoft.SignalRService/signalR
 - Microsoft.Storage/storageAccounts
 - Microsoft.Web/Sites
 - Microsoft.Web/staticSites

@@ -28,6 +28,7 @@ param serviceResourceGroupName string = resourceGroup().name
   'Microsoft.AppConfiguration/configurationStores'
   'Microsoft.EventHub/namespaces'
   'Microsoft.ServiceBus/namespaces'
+  'Microsoft.SignalRService/signalR'
   'Microsoft.Storage/storageAccounts'
   'Microsoft.Web/sites'
   'Microsoft.Web/staticSites'
