@@ -34,7 +34,7 @@ param serviceResourceGroupName string = resourceGroup().name
 @description('The resource type of the service the endpoint is for.')
 param serviceType string
 module mapper 'modules/mapper.bicep' = {
-  name: 'mapper'
+  name: '${prefix}-mapper'
   params: {
     serviceName: serviceName
     serviceType: serviceType
@@ -43,14 +43,14 @@ module mapper 'modules/mapper.bicep' = {
 }
 
 module zoneHandler 'modules/zoneHandler.bicep' = if(!useExistingZones) {
-  name: 'zoneHandler'
+  name: '${prefix}-zoneHandler'
   params: {
     zones: mapper.outputs.zones
   }
 }
 
 module core 'modules/core.bicep' = {
-  name: 'core'
+  name: '${prefix}-core'
   params: {
     zones: mapper.outputs.zones
     groupIds: mapper.outputs.groupIds
