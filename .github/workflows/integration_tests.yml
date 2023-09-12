@@ -26,6 +26,6 @@ jobs:
         with:
           azcliversion: 2.51.0
           inlineScript: |
-            az group delete -n 'bicep-private-endpoint${{ github.run_number }}' -y
+            az group delete -n 'bicep-private-endpoint${{ github.run_number }}' -y --no-wait
 
 
