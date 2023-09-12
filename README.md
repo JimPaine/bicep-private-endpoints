@@ -34,8 +34,8 @@ module endpoints 'main.json' = {
   name: '${name}-endpoints'
   params: {
     location: location
-    prefix: func.name
     serviceId: func.id
+    serviceName: func.name
     serviceType: func.type
     subnetId: vnet.properties.subnets[0].id
     vnetId: vnet.id
