@@ -3,9 +3,6 @@ targetScope = 'resourceGroup'
 @description('The location the resources will be deployed to.')
 param location string = resourceGroup().location
 
-@description('The prefix to use when naming resources.')
-param prefix string
-
 @description('The resource ID of the vnet the private DNS zones will be attached to.')
 param vnetId string
 
@@ -37,7 +34,7 @@ param serviceResourceGroupName string = resourceGroup().name
 @description('The resource type of the service the endpoint is for.')
 param serviceType string
 module mapper 'modules/mapper.bicep' = {
-  name: '${prefix}-mapper'
+  name: '${serviceName}-mapper'
   params: {
     serviceName: serviceName
     serviceType: serviceType
@@ -46,18 +43,18 @@ module mapper 'modules/mapper.bicep' = {
 }
 
 module zoneHandler 'modules/zoneHandler.bicep' = if(!useExistingZones) {
-  name: '${prefix}-zoneHandler'
+  name: '${serviceName}-zoneHandler'
   params: {
     zones: mapper.outputs.zones
   }
 }
 
 module core 'modules/core.bicep' = {
-  name: '${prefix}-core'
+  name: '${serviceName}-core'
   params: {
     zones: mapper.outputs.zones
     groupIds: mapper.outputs.groupIds
-    prefix: prefix
+    serviceName: serviceName
     serviceId: serviceId
     subnetId: subnetId
     vnetId: vnetId

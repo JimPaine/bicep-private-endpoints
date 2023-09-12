@@ -40,11 +40,6 @@ var zones = serviceType == 'Microsoft.AppConfiguration/configurationStores' ? [
   'privatelink.${replace(static.properties.defaultHostname,static.name,'')}' // parition ID is generated at deploy time, so work around to find zone
 ] : []
 
-resource static 'Microsoft.Web/staticSites@2022-09-01' existing = if (serviceType == 'Microsoft.Web/staticSites') {
-  name: serviceName
-  scope: resourceGroup(serviceResourceGroupName)
-}
-
 var groupIds = serviceType == 'Microsoft.AppConfiguration/configurationStores' ? [
   'configurationStores'
 ] : serviceType == 'Microsoft.EventHub/namespaces' ? [
@@ -65,6 +60,11 @@ var groupIds = serviceType == 'Microsoft.AppConfiguration/configurationStores' ?
 ] : serviceType == 'Microsoft.Web/staticSites' ? [
   'staticSites'
 ] : []
+
+resource static 'Microsoft.Web/staticSites@2022-09-01' existing = if (serviceType == 'Microsoft.Web/staticSites') {
+  name: serviceName
+  scope: resourceGroup(serviceResourceGroupName)
+}
 
 output zones array = zones
 output groupIds array = groupIds

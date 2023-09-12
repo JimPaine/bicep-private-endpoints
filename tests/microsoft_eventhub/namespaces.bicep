@@ -1,6 +1,6 @@
 targetScope = 'resourceGroup'
 
-param name string = 'servicebus-test'
+param name string = 'eventhub'
 
 @description('Location to deploy test resources to. Defaults to resource group location')
 param location string = resourceGroup().location
@@ -17,12 +17,12 @@ module endpoints '../../main.bicep' = {
   name: '${name}-endpoints'
   params: {
     location: location
-    prefix: 'sb'
     serviceId: namespace.id
     serviceName: namespace.name
     serviceType: namespace.type
     subnetId: vnet.outputs.subnetId
     vnetId: vnet.outputs.id
+    useExistingZones: true
   }
 }
 
@@ -38,8 +38,8 @@ module vnet '../_setup/vnet.bicep' = {
   }
 }
 
-resource namespace 'Microsoft.ServiceBus/namespaces@2022-10-01-preview' = {
-  name: 'bus${suffix}'
+resource namespace 'Microsoft.EventHub/namespaces@2023-01-01-preview' = {
+  name: '${name}${suffix}'
   location: location
   sku: {
     name: 'Premium'

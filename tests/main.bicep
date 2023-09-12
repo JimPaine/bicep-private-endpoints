@@ -20,7 +20,7 @@ var cidrs = {
   vault_test: '10.0.8.0/24'
 }
 
-module function_test 'microsoft_web_sites/function_test.bicep' = {
+module function_test 'microsoft_web/sites_function.bicep' = {
   scope: group
   name: 'function_test'
   params: {
@@ -29,7 +29,7 @@ module function_test 'microsoft_web_sites/function_test.bicep' = {
   }
 }
 
-module webapp_test 'microsoft_web_sites/webapp_test.bicep' = {
+module webapp_test 'microsoft_web/sites.bicep' = {
   scope: group
   name: 'webapp_test'
   params: {
@@ -41,7 +41,7 @@ module webapp_test 'microsoft_web_sites/webapp_test.bicep' = {
   ]
 }
 
-module servicebus_test 'microsoft_servicebus_namespaces/servicebus_test.bicep' = {
+module servicebus_test 'microsoft_servicebus/namespaces.bicep' = {
   scope: group
   name: 'servicebus_test'
   params: {
@@ -50,7 +50,7 @@ module servicebus_test 'microsoft_servicebus_namespaces/servicebus_test.bicep' =
   }
 }
 
-module eventhub_test 'microsoft_eventhub_namespaces/eventhub_test.bicep' = {
+module eventhub_test 'microsoft_eventhub/namespaces.bicep' = {
   scope: group
   name: 'eventhub_test'
   params: {
@@ -62,7 +62,7 @@ module eventhub_test 'microsoft_eventhub_namespaces/eventhub_test.bicep' = {
   ]
 }
 
-module storage_test 'microsoft_storage_storageaccounts/blob_file_queue_table_test.bicep' = {
+module storage_test 'microsoft_storage/storageaccounts.bicep' = {
   scope: group
   name: 'storage_test'
   params: {
@@ -71,7 +71,7 @@ module storage_test 'microsoft_storage_storageaccounts/blob_file_queue_table_tes
   }
 }
 
-module app_config_test 'microsoft_appconfiguration_configurationstores/app_config.bicep' = {
+module app_config_test 'microsoft_appconfiguration/configurationstores.bicep' = {
   scope: group
   name: 'app_config_test'
   params: {
@@ -81,7 +81,7 @@ module app_config_test 'microsoft_appconfiguration_configurationstores/app_confi
 }
 
 // exclude due to capacity issues
-// module static_site_test 'microsoft_web_staticsites/staticsite_test.bicep' = {
+// module static_site_test 'microsoft_web/staticSites.bicep' = {
 //   scope: group
 //   name: 'static_site_test'
 //   params: {
@@ -90,7 +90,7 @@ module app_config_test 'microsoft_appconfiguration_configurationstores/app_confi
 //   }
 // }
 
-module signal_r_test 'microsoft_signalrservice_signalr/signalr.bicep' = {
+module signal_r_test 'microsoft_signalrservice/signalr.bicep' = {
   scope: group
   name: 'signal_r_test'
   params: {
@@ -99,7 +99,7 @@ module signal_r_test 'microsoft_signalrservice_signalr/signalr.bicep' = {
   }
 }
 
-module vault_test 'microsoft_keyvault_vaults/key_vault.bicep' = {
+module vault_test 'microsoft_keyvault/vaults.bicep' = {
   scope: group
   name: 'vault_test'
   params: {

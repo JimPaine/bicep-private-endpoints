@@ -1,6 +1,6 @@
 targetScope = 'resourceGroup'
 
-param name string = 'static-test'
+param name string = 'appconfig'
 
 @description('Location to deploy test resources to. Defaults to resource group location')
 param location string = resourceGroup().location
@@ -17,10 +17,9 @@ module endpoints '../../main.bicep' = {
   name: '${name}-endpoints'
   params: {
     location: location
-    prefix: 'static'
-    serviceId: site.id
-    serviceName: site.name
-    serviceType: site.type
+    serviceId: config.id
+    serviceName: config.name
+    serviceType: config.type
     subnetId: vnet.outputs.subnetId
     vnetId: vnet.outputs.id
   }
@@ -38,11 +37,10 @@ module vnet '../_setup/vnet.bicep' = {
   }
 }
 
-resource site 'Microsoft.Web/staticSites@2022-09-01' = {
+resource config 'Microsoft.AppConfiguration/configurationStores@2023-03-01' = {
   name: '${name}${suffix}'
   location: location
-
-  properties: {
-
+  sku: {
+    name: 'standard'
   }
 }

@@ -1,6 +1,6 @@
 targetScope = 'resourceGroup'
 
-param name string = 'function-test'
+param name string = 'function'
 
 @description('Location to deploy test resources to. Defaults to resource group location')
 param location string = resourceGroup().location
@@ -17,7 +17,6 @@ module endpoints '../../main.bicep' = {
   name: '${name}-endpoints'
   params: {
     location: location
-    prefix: 'func'
     serviceId: func.id
     serviceName: func.name
     serviceType: func.type
@@ -39,7 +38,7 @@ module vnet '../_setup/vnet.bicep' = {
 }
 
 resource storage 'Microsoft.Storage/storageAccounts@2022-05-01' = {
-  name: 'func${suffix}'
+  name: '${name}${suffix}'
   location: location
   kind: 'StorageV2'
   sku: {

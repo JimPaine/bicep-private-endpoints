@@ -1,6 +1,6 @@
 targetScope = 'resourceGroup'
 
-param name string = 'vault-test'
+param name string = 'signalr'
 
 @description('Location to deploy test resources to. Defaults to resource group location')
 param location string = resourceGroup().location
@@ -17,10 +17,9 @@ module endpoints '../../main.bicep' = {
   name: '${name}-endpoints'
   params: {
     location: location
-    prefix: 'vault'
-    serviceId: vault.id
-    serviceName: vault.name
-    serviceType: vault.type
+    serviceId: signalr.id
+    serviceName: signalr.name
+    serviceType: signalr.type
     subnetId: vnet.outputs.subnetId
     vnetId: vnet.outputs.id
   }
@@ -38,15 +37,11 @@ module vnet '../_setup/vnet.bicep' = {
   }
 }
 
-resource vault 'Microsoft.KeyVault/vaults@2023-02-01' = {
-  name: '${name}-${suffix}'
+resource signalr 'Microsoft.SignalRService/signalR@2023-06-01-preview' = {
+  name: '${name}${suffix}'
   location: location
-  properties: {
-    sku: {
-      family: 'A'
-      name: 'premium'
-    }
-    tenantId: subscription().tenantId
-    accessPolicies: []
+  sku: {
+    name: 'Premium_P1'
+    capacity: 1
   }
 }

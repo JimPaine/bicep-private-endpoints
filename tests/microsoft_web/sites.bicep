@@ -1,6 +1,6 @@
 targetScope = 'resourceGroup'
 
-param name string = 'storage-test'
+param name string = 'webapp'
 
 @description('Location to deploy test resources to. Defaults to resource group location')
 param location string = resourceGroup().location
@@ -17,12 +17,12 @@ module endpoints '../../main.bicep' = {
   name: '${name}-endpoints'
   params: {
     location: location
-    prefix: 'store'
-    serviceId: storage.id
-    serviceName: storage.name
-    serviceType: storage.type
+    serviceId: app.id
+    serviceName: app.name
+    serviceType: app.type
     subnetId: vnet.outputs.subnetId
     vnetId: vnet.outputs.id
+    useExistingZones: true
   }
 }
 
@@ -38,12 +38,32 @@ module vnet '../_setup/vnet.bicep' = {
   }
 }
 
-var cleanedName = replace(name, '-', '')
-resource storage 'Microsoft.Storage/storageAccounts@2022-05-01' = {
-  name: '${cleanedName}${suffix}'
+resource farm 'Microsoft.Web/serverfarms@2022-09-01' = {
+  name: 'appfarm'
   location: location
-  kind: 'StorageV2'
+  kind: 'linux'
   sku: {
-    name: 'Standard_ZRS'
+    name: 'P1V3'
+    tier: 'PremiumV3'
+  }
+
+  properties: {
+    reserved: true
+    zoneRedundant: false
+    targetWorkerCount: 3
+    targetWorkerSizeId: 3
+  }
+}
+
+
+resource app 'Microsoft.Web/sites@2020-12-01' = {
+  name: '${name}${suffix}'
+  location: location
+
+  properties: {
+    serverFarmId: farm.id
+    siteConfig: {
+      appSettings: []
+    }
   }
 }
