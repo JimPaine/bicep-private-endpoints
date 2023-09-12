@@ -1,6 +1,6 @@
 targetScope = 'resourceGroup'
 
-param name string = 'servicebus-test'
+param name string = 'vault'
 
 @description('Location to deploy test resources to. Defaults to resource group location')
 param location string = resourceGroup().location
@@ -17,9 +17,9 @@ module endpoints '../../main.bicep' = {
   name: '${name}-endpoints'
   params: {
     location: location
-    prefix: 'sb'
-    serviceId: namespace.id
-    serviceType: namespace.type
+    serviceId: vault.id
+    serviceName: vault.name
+    serviceType: vault.type
     subnetId: vnet.outputs.subnetId
     vnetId: vnet.outputs.id
   }
@@ -37,10 +37,15 @@ module vnet '../_setup/vnet.bicep' = {
   }
 }
 
-resource namespace 'Microsoft.ServiceBus/namespaces@2022-10-01-preview' = {
-  name: 'bus${suffix}'
+resource vault 'Microsoft.KeyVault/vaults@2023-02-01' = {
+  name: '${name}${suffix}'
   location: location
-  sku: {
-    name: 'Premium'
+  properties: {
+    sku: {
+      family: 'A'
+      name: 'premium'
+    }
+    tenantId: subscription().tenantId
+    accessPolicies: []
   }
 }

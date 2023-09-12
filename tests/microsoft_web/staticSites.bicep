@@ -1,6 +1,6 @@
 targetScope = 'resourceGroup'
 
-param name string = 'eventhub-test'
+param name string = 'static'
 
 @description('Location to deploy test resources to. Defaults to resource group location')
 param location string = resourceGroup().location
@@ -17,12 +17,11 @@ module endpoints '../../main.bicep' = {
   name: '${name}-endpoints'
   params: {
     location: location
-    prefix: 'eh'
-    serviceId: namespace.id
-    serviceType: namespace.type
+    serviceId: site.id
+    serviceName: site.name
+    serviceType: site.type
     subnetId: vnet.outputs.subnetId
     vnetId: vnet.outputs.id
-    useExistingZones: true
   }
 }
 
@@ -38,10 +37,11 @@ module vnet '../_setup/vnet.bicep' = {
   }
 }
 
-resource namespace 'Microsoft.EventHub/namespaces@2023-01-01-preview' = {
-  name: 'eh${suffix}'
+resource site 'Microsoft.Web/staticSites@2022-09-01' = {
+  name: '${name}${suffix}'
   location: location
-  sku: {
-    name: 'Premium'
+
+  properties: {
+
   }
 }

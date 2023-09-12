@@ -1,6 +1,6 @@
 targetScope = 'resourceGroup'
 
-param name string = 'storage-test'
+param name string = 'storage'
 
 @description('Location to deploy test resources to. Defaults to resource group location')
 param location string = resourceGroup().location
@@ -17,8 +17,8 @@ module endpoints '../../main.bicep' = {
   name: '${name}-endpoints'
   params: {
     location: location
-    prefix: 'store'
     serviceId: storage.id
+    serviceName: storage.name
     serviceType: storage.type
     subnetId: vnet.outputs.subnetId
     vnetId: vnet.outputs.id
@@ -37,9 +37,8 @@ module vnet '../_setup/vnet.bicep' = {
   }
 }
 
-var cleanedName = replace(name, '-', '')
 resource storage 'Microsoft.Storage/storageAccounts@2022-05-01' = {
-  name: '${cleanedName}${suffix}'
+  name: '${name}${suffix}'
   location: location
   kind: 'StorageV2'
   sku: {

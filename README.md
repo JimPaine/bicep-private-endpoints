@@ -34,8 +34,8 @@ module endpoints 'main.json' = {
   name: '${name}-endpoints'
   params: {
     location: location
-    prefix: func.name
     serviceId: func.id
+    serviceName: func.name
     serviceType: func.type
     subnetId: vnet.properties.subnets[0].id
     vnetId: vnet.id
@@ -48,21 +48,26 @@ module endpoints 'main.json' = {
 | Name        | Type          | Description                                                            |
 | ----------- | ------------- | ---------------------------------------------------------------------- |
 | location    | string        | The location the resources will be deployed to.                        |
-| prefix      | string        | The prefix to use when naming resources.                               |
 | serviceId   | resource ID   | The resource ID of the service the endpoint is for.                    |
+| serviceName | string        | The name of the resource the endpoint is for.                          |
 | serviceType | resource type | The resource type of the service the endpoint is for.                  |
 | subnetId    | resource ID   | The resource ID of the subnet that the endpoint will be deployed to.   |
 | vnetId      | resource ID   | The resource ID of the vnet the private DNS zones will be attached to. |
 
 ## Optional parameters
 
-| Name             | Type | Description                                    |
-| ---------------- | -----| ---------------------------------------------- |
-| useExistingZones | bool | The Use existing zones for this resource type. |
+| Name                     | Type   | Description                                                      |
+| ------------------------ | ------ | ---------------------------------------------------------------- |
+| useExistingZones         | bool   | The Use existing zones for this resource type.                   |
+| serviceResourceGroupName | string | The name of the resource group the service has been deployed to. |
 
 ## Supported resources
 
+- Microsoft.AppConfiguration/configurationStores
 - Microsoft.EventHub/namespaces
+- Microsoft.KeyVault/vaults
 - Microsoft.ServiceBus/Namespaces
+- Microsoft.SignalRService/signalR
 - Microsoft.Storage/storageAccounts
 - Microsoft.Web/Sites
+- Microsoft.Web/staticSites
