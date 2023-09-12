@@ -25,6 +25,7 @@ param useExistingZones bool = false
 param serviceResourceGroupName string = resourceGroup().name
 
 @allowed([
+  'Microsoft.AppConfiguration/configurationStores'
   'Microsoft.EventHub/namespaces'
   'Microsoft.ServiceBus/namespaces'
   'Microsoft.Storage/storageAccounts'

@@ -7,6 +7,7 @@ param serviceName string
 param serviceResourceGroupName string = resourceGroup().name
 
 @allowed([
+  'Microsoft.AppConfiguration/configurationStores'
   'Microsoft.EventHub/namespaces'
   'Microsoft.ServiceBus/namespaces'
   'Microsoft.Storage/storageAccounts'
@@ -16,7 +17,9 @@ param serviceResourceGroupName string = resourceGroup().name
 @description('The resource type of the service the endpoint is for.')
 param serviceType string
 
-var zones = serviceType == 'Microsoft.EventHub/namespaces' ? [
+var zones = serviceType == 'Microsoft.AppConfiguration/configurationStores' ? [
+  'privatelink.azconfig.io'
+] : serviceType == 'Microsoft.EventHub/namespaces' ? [
   'privatelink.servicebus.windows.net'
 ] :  serviceType == 'Microsoft.ServiceBus/namespaces' ? [
   'privatelink.servicebus.windows.net'
@@ -36,7 +39,9 @@ resource static 'Microsoft.Web/staticSites@2022-09-01' existing = if (serviceTyp
   scope: resourceGroup(serviceResourceGroupName)
 }
 
-var groupIds = serviceType == 'Microsoft.EventHub/namespaces' ? [
+var groupIds = serviceType == 'Microsoft.AppConfiguration/configurationStores' ? [
+  'configurationStores'
+] : serviceType == 'Microsoft.EventHub/namespaces' ? [
   'namespace'
 ] : serviceType == 'Microsoft.ServiceBus/namespaces' ? [
   'namespace'

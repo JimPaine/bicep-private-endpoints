@@ -14,6 +14,7 @@ var cidrs = {
   eventhub_test: '10.0.2.0/24'
   storage_test: '10.0.3.0/24'
   webapp_test: '10.0.4.0/24'
+  app_config_test: '10.0.5.0/24'
 }
 
 module function_test 'microsoft_web_sites/function_test.bicep' = {
@@ -67,3 +68,11 @@ module storage_test 'microsoft_storage_storageaccounts/blob_file_queue_table_tes
   }
 }
 
+module app_config_test 'microsoft_appconfiguration_configurationstores/app_config.bicep' = {
+  scope: group
+  name: 'app_config_test'
+  params: {
+    cidr: cidrs.app_config_test
+    location: location
+  }
+}

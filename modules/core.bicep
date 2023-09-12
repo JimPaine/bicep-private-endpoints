@@ -16,6 +16,7 @@ param subnetId string
 param serviceId string
 
 @allowed([
+  'Microsoft.AppConfiguration/configurationStores'
   'Microsoft.EventHub/namespaces'
   'Microsoft.ServiceBus/namespaces'
   'Microsoft.Storage/storageAccounts'
