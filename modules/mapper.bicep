@@ -24,6 +24,8 @@ var zones = serviceType == 'Microsoft.AppConfiguration/configurationStores' ? [
   'privatelink.servicebus.windows.net'
 ] :  serviceType == 'Microsoft.ServiceBus/namespaces' ? [
   'privatelink.servicebus.windows.net'
+] : serviceType == 'Microsoft.SignalRService/signalR' ? [
+  'privatelink.service.signalr.net'
 ] : serviceType == 'Microsoft.Storage/storageAccounts' ? [
   'privatelink.blob.${environment().suffixes.storage}'
   'privatelink.file.${environment().suffixes.storage}'
@@ -46,6 +48,8 @@ var groupIds = serviceType == 'Microsoft.AppConfiguration/configurationStores' ?
   'namespace'
 ] : serviceType == 'Microsoft.ServiceBus/namespaces' ? [
   'namespace'
+] : serviceType == 'Microsoft.SignalRService/signalR' ? [
+  'signalr'
 ] : serviceType == 'Microsoft.Storage/storageAccounts' ? [
   'blob'
   'file'
