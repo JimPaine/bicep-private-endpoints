@@ -12,101 +12,53 @@ param vnetId string
 @description('The resource ID of the subnet that the endpoint will be deployed to.')
 param subnetId string
 
+@description('The name of the resource the endpoint is for.')
+param serviceName string = ''
+
 @description('The resource ID of the service the endpoint is for.')
 param serviceId string
 
 @description('Use existing zones for this resource type.')
 param useExistingZones bool = false
 
+@description('The name of the resource group the service has been deployed to.')
+param serviceResourceGroupName string = resourceGroup().name
+
 @allowed([
   'Microsoft.EventHub/namespaces'
   'Microsoft.ServiceBus/namespaces'
   'Microsoft.Storage/storageAccounts'
   'Microsoft.Web/sites'
+  'Microsoft.Web/staticSites'
 ])
 @description('The resource type of the service the endpoint is for.')
 param serviceType string
-
-var cleanedServiceType = toLower(replace(replace(serviceType, '/', '-'), '.', '-'))
-
-var groupIds = serviceType == 'Microsoft.EventHub/namespaces' ? [
-  'namespace'
-] : serviceType == 'Microsoft.ServiceBus/namespaces' ? [
-  'namespace'
-] : serviceType == 'Microsoft.Storage/storageAccounts' ? [
-  'blob'
-  'file'
-  'queue'
-  'table'
-] : serviceType == 'Microsoft.Web/sites' ? [
-  'sites'
-] : []
-
-var zones = serviceType == 'Microsoft.EventHub/namespaces' ? [
-  'privatelink.servicebus.windows.net'
-] :  serviceType == 'Microsoft.ServiceBus/namespaces' ? [
-  'privatelink.servicebus.windows.net'
-] : serviceType == 'Microsoft.Storage/storageAccounts' ? [
-  'privatelink.blob.${environment().suffixes.storage}'
-  'privatelink.file.${environment().suffixes.storage}'
-  'privatelink.queue.${environment().suffixes.storage}'
-  'privatelink.table.${environment().suffixes.storage}'
-] : serviceType == 'Microsoft.Web/sites' ? [
-  'privatelink.azurewebsites.net'
-] : []
-
-@batchSize(1)
-resource endpoints 'Microsoft.Network/privateEndpoints@2021-05-01' = [for groupId in groupIds: {
-  name: '${prefix}-${cleanedServiceType}-${groupId}-pe'
-  location: location
-  properties: {
-    subnet: {
-      id: subnetId
-    }
-    privateLinkServiceConnections: [
-      {
-        name: '${cleanedServiceType}-pe'
-        properties: {
-          privateLinkServiceId: serviceId
-          groupIds: [
-            groupId
-          ]
-        }
-      }
-    ]
+module mapper 'modules/mapper.bicep' = {
+  name: 'mapper'
+  params: {
+    serviceName: serviceName
+    serviceType: serviceType
+    serviceResourceGroupName: serviceResourceGroupName
   }
-}]
+}
 
-resource existingDnsZones 'Microsoft.Network/privateDnsZones@2018-09-01' existing = [for zone in zones: if(useExistingZones) {
-  name: zone
-}]
-
-resource newDnsZones 'Microsoft.Network/privateDnsZones@2018-09-01' = [for zone in zones: if(!useExistingZones) {
-  name: zone
-  location: 'global'
-}]
-
-resource dnsGoups 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2020-03-01' = [for (groupId, index) in groupIds: {
-  name: '${prefix}-${cleanedServiceType}-${groupId}-group'
-  parent: endpoints[index]
-  properties: {
-    privateDnsZoneConfigs: [for (zone, i) in zones: {
-      name: zone
-      properties: {
-        privateDnsZoneId: useExistingZones ? existingDnsZones[i].id : newDnsZones[i].id
-      }
-    }]
+module zoneHandler 'modules/zoneHandler.bicep' = if(!useExistingZones) {
+  name: 'zoneHandler'
+  params: {
+    zones: mapper.outputs.zones
   }
-}]
+}
 
-resource networkLinks 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2018-09-01' = [for (zone, index) in zones: {
-  name: '${zone}/${prefix}'
-  location: 'global'
-  properties: {
-    virtualNetwork: {
-      id: vnetId
-    }
-    registrationEnabled: false
+module core 'modules/core.bicep' = {
+  name: 'core'
+  params: {
+    zones: mapper.outputs.zones
+    groupIds: mapper.outputs.groupIds
+    prefix: prefix
+    serviceId: serviceId
+    serviceType: serviceType
+    subnetId: subnetId
+    vnetId: vnetId
+    location: location
   }
-  dependsOn: useExistingZones ? existingDnsZones : newDnsZones
-}]
+}
