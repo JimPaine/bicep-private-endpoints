@@ -57,7 +57,6 @@ module core 'modules/core.bicep' = {
     groupIds: mapper.outputs.groupIds
     prefix: prefix
     serviceId: serviceId
-    serviceType: serviceType
     subnetId: subnetId
     vnetId: vnetId
     location: location

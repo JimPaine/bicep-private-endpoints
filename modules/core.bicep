@@ -15,28 +15,15 @@ param subnetId string
 @description('The resource ID of the service the endpoint is for.')
 param serviceId string
 
-@allowed([
-  'Microsoft.AppConfiguration/configurationStores'
-  'Microsoft.EventHub/namespaces'
-  'Microsoft.ServiceBus/namespaces'
-  'Microsoft.Storage/storageAccounts'
-  'Microsoft.Web/sites'
-  'Microsoft.Web/staticSites'
-])
-@description('The resource type of the service the endpoint is for.')
-param serviceType string
-
 @description('The group IDs required for the private endpoint.')
 param groupIds array
 
 @description('The zones required for the private endpoint.')
 param zones array
 
-var cleanedServiceType = toLower(replace(replace(serviceType, '/', '-'), '.', '-'))
-
 @batchSize(1)
 resource endpoints 'Microsoft.Network/privateEndpoints@2021-05-01' = [for groupId in groupIds: {
-  name: '${prefix}-${cleanedServiceType}-${groupId}-pe'
+  name: '${prefix}-${groupId}-pe'
   location: location
   properties: {
     subnet: {
@@ -44,7 +31,7 @@ resource endpoints 'Microsoft.Network/privateEndpoints@2021-05-01' = [for groupI
     }
     privateLinkServiceConnections: [
       {
-        name: '${cleanedServiceType}-pe'
+        name: '${prefix}-pe'
         properties: {
           privateLinkServiceId: serviceId
           groupIds: [
@@ -61,7 +48,7 @@ resource existingDnsZones 'Microsoft.Network/privateDnsZones@2018-09-01' existin
 }]
 
 resource dnsGoups 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2020-03-01' = [for (groupId, index) in groupIds: {
-  name: '${prefix}-${cleanedServiceType}-${groupId}-group'
+  name: '${prefix}-${groupId}-group'
   parent: endpoints[index]
   properties: {
     privateDnsZoneConfigs: [for (zone, i) in zones: {
