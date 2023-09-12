@@ -13,6 +13,7 @@ var cidrs = {
   servicebus_test: '10.0.1.0/24'
   eventhub_test: '10.0.2.0/24'
   storage_test: '10.0.3.0/24'
+  webapp_test: '10.0.4.0/24'
 }
 
 module function_test 'microsoft_web_sites/function_test.bicep' = {
@@ -20,6 +21,15 @@ module function_test 'microsoft_web_sites/function_test.bicep' = {
   name: 'function_test'
   params: {
     cidr: cidrs.function_test
+    location: location
+  }
+}
+
+module webapp_test 'microsoft_web_sites/webapp_test.bicep' = {
+  scope: group
+  name: 'webapp_test'
+  params: {
+    cidr: cidrs.webapp_test
     location: location
   }
 }
