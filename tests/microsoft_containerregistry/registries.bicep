@@ -41,6 +41,6 @@ resource acr 'Microsoft.ContainerRegistry/registries@2023-08-01-preview' = {
   name: '${name}${suffix}'
   location: location
   sku: {
-    name: 'Standard'
+    name: 'Premium'
   }
 }
