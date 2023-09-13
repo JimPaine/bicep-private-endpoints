@@ -8,6 +8,7 @@ param serviceResourceGroupName string = resourceGroup().name
 
 @allowed([
   'Microsoft.AppConfiguration/configurationStores'
+  'Microsoft.ContainerRegistry/registries'
   'Microsoft.EventHub/namespaces'
   'Microsoft.KeyVault/vaults'
   'Microsoft.ServiceBus/namespaces'
@@ -21,6 +22,8 @@ param serviceType string
 
 var zones = serviceType == 'Microsoft.AppConfiguration/configurationStores' ? [
   'privatelink.azconfig.io'
+] : serviceType == 'Microsoft.ContainerRegistry/registries' ? [
+  'privatelink.azurecr.io'
 ] : serviceType == 'Microsoft.EventHub/namespaces' ? [
   'privatelink.servicebus.windows.net'
 ] : serviceType == 'Microsoft.KeyVault/vaults' ? [
@@ -42,6 +45,8 @@ var zones = serviceType == 'Microsoft.AppConfiguration/configurationStores' ? [
 
 var groupIds = serviceType == 'Microsoft.AppConfiguration/configurationStores' ? [
   'configurationStores'
+] : serviceType == 'Microsoft.ContainerRegistry/registries' ? [
+  'registry'
 ] : serviceType == 'Microsoft.EventHub/namespaces' ? [
   'namespace'
 ] : serviceType == 'Microsoft.KeyVault/vaults' ? [
