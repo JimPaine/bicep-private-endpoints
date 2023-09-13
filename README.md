@@ -64,6 +64,8 @@ module endpoints 'main.json' = {
 ## Supported resources
 
 - Microsoft.AppConfiguration/configurationStores
+- Microsoft.ContainerRegistry/registries
+- Microsoft.ContainerService/managedClusters
 - Microsoft.EventHub/namespaces
 - Microsoft.KeyVault/vaults
 - Microsoft.ServiceBus/Namespaces

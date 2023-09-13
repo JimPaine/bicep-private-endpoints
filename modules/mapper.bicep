@@ -8,6 +8,8 @@ param serviceResourceGroupName string = resourceGroup().name
 
 @allowed([
   'Microsoft.AppConfiguration/configurationStores'
+  'Microsoft.ContainerRegistry/registries'
+  'Microsoft.ContainerService/managedClusters'
   'Microsoft.EventHub/namespaces'
   'Microsoft.KeyVault/vaults'
   'Microsoft.ServiceBus/namespaces'
@@ -21,6 +23,10 @@ param serviceType string
 
 var zones = serviceType == 'Microsoft.AppConfiguration/configurationStores' ? [
   'privatelink.azconfig.io'
+] : serviceType == 'Microsoft.ContainerRegistry/registries' ? [
+  'privatelink.azurecr.io'
+] : serviceType == 'Microsoft.ContainerService/managedClusters' ? [
+  'privatelink.${aks.location}.azmk8s.io'
 ] : serviceType == 'Microsoft.EventHub/namespaces' ? [
   'privatelink.servicebus.windows.net'
 ] : serviceType == 'Microsoft.KeyVault/vaults' ? [
@@ -42,6 +48,10 @@ var zones = serviceType == 'Microsoft.AppConfiguration/configurationStores' ? [
 
 var groupIds = serviceType == 'Microsoft.AppConfiguration/configurationStores' ? [
   'configurationStores'
+] : serviceType == 'Microsoft.ContainerRegistry/registries' ? [
+  'registry'
+] : serviceType == 'Microsoft.ContainerService/managedClusters' ? [
+  'management'
 ] : serviceType == 'Microsoft.EventHub/namespaces' ? [
   'namespace'
 ] : serviceType == 'Microsoft.KeyVault/vaults' ? [
@@ -62,6 +72,11 @@ var groupIds = serviceType == 'Microsoft.AppConfiguration/configurationStores' ?
 ] : []
 
 resource static 'Microsoft.Web/staticSites@2022-09-01' existing = if (serviceType == 'Microsoft.Web/staticSites') {
+  name: serviceName
+  scope: resourceGroup(serviceResourceGroupName)
+}
+
+resource aks 'Microsoft.ContainerService/managedClusters@2023-07-02-preview' existing = if (serviceType == 'Microsoft.ContainerService/managedClusters') {
   name: serviceName
   scope: resourceGroup(serviceResourceGroupName)
 }

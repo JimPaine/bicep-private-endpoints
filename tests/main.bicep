@@ -18,6 +18,7 @@ var cidrs = {
   static_site_test: '10.0.6.0./24'
   signal_r_test: '10.0.7.0/24'
   vault_test: '10.0.8.0/24'
+  acr_test: '10.0.9.0/24'
 }
 
 module function_test 'microsoft_web/sites_function.bicep' = {
@@ -104,6 +105,15 @@ module vault_test 'microsoft_keyvault/vaults.bicep' = {
   name: 'vault_test'
   params: {
     cidr: cidrs.vault_test
+    location: location
+  }
+}
+
+module acr_test 'microsoft_containerregistry/registries.bicep' = {
+  scope: group
+  name: 'acr_test'
+  params: {
+    cidr: cidrs.acr_test
     location: location
   }
 }
