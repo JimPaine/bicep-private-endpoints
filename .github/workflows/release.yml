@@ -28,20 +28,6 @@ jobs:
             az config set bicep.use_binary_from_path=False
             az bicep install
             az bicep build -f ./main.bicep
-      - name: docker login
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: publish
-        uses: azure/CLI@v1
-        with:
-          azcliversion: 2.51.0
-          inlineScript: |
-            az config set bicep.use_binary_from_path=False
-            az bicep install
-            az bicep publish -f ./main.bicep --target br:ghcr.io/jimpaine/bicep-private-endpoints:${{github.event.inputs.tag}}
       - name: Create release
         run: gh release create ${{github.event.inputs.tag}} './main.bicep' -p --generate-notes
         env:
